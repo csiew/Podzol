@@ -16,3 +16,8 @@ Podzol is navigable through a rudimentary CLI interface. This requires you to us
 - `delete -f [key1]`: Remove a podcast from your library
 - `reload`: Reload the data from the JSON indexes
 - `exit`: Exit Podzol
+
+## Future changes
+1. Podzol will store its JSON files in ~/.local/share/ in Linux and macOS.
+2. Explore Ncurses to replace the shell-like interface (akin to [Castero](https://github.com/xgi/castero)).
+3. Use backend for more sophisticated frontend clients like GNOME/GTK or even a SwiftUI Mac app.
