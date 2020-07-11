@@ -1,7 +1,10 @@
 import os
+import sys
 import json
 from XmlFeed import XmlFeed
 
+from Feed import Feed
+from Episode import Episode
 from DataIndex import DataIndex
 from FeedsIndex import FeedsIndex
 from EpisodesIndex import EpisodesIndex
@@ -39,9 +42,9 @@ class Podzol(object):
     
     def write_json(self, path, data_dict):
         error_msg = "Error: Unable to write to path - " + path
-        with open(path, "wb", encoding="utf-8") as output_file:
+        with open(path, "w") as output_file:
             try:
-                json.dump(data_dict, output_file, ensure_ascii=False, indent=4)
+                json.dump(data_dict, output_file)
                 return 0
             except:
                 print(error_msg)
@@ -62,35 +65,65 @@ class Podzol(object):
     
     def update_feed_index(self):
         if self.data_index is not None:
-            self.write_json(self.get_feeds_path(), self.data_index.feeds.items)
+            self.write_json(self.get_feeds_path(), self.data_index.feeds.as_dict())
             return 0
         return 1
     
-    def update_episodes_index(self, data_dict):
+    def update_episodes_index(self):
         if self.data_index is not None:
-            self.write_json(self.get_episodes_path(), self.data_index.episodes.items)
+            self.write_json(self.get_episodes_path(), self.data_index.episodes.as_dict())
             return 0
         return 1
+    
+    def dict_to_feed(self, feed_dict):
+        feed = Feed(
+            feed_id=feed_dict["feed_id"],
+            title=feed_dict["title"],
+            description=feed_dict["description"],
+            link=feed_dict["link"],
+            date_updated=feed_dict["date_updated"],
+            feed_copyright=feed_dict["feed_copyright"]
+        )
+        return feed
+    
+    def dict_to_episode(self, episode_dict):
+        episode = Episode(
+            ep_id=episode_dict["ep_id"],
+            feed_id=episode_dict["feed_id"],
+            title=episode_dict["title"],
+            description=episode_dict["description"],
+            link=episode_dict["link"],
+            date_added=episode_dict["date_added"],
+            ep_copyright=episode_dict["ep_copyright"],
+            source_url=episode_dict["source_url"]
+        )
+        return episode
     
     def add_podcast(self, url):
         try:
-            feed, episodes = XmlFeed(url=url).parse()
+            feed_dict, episodes_dict = XmlFeed(url=url).parse()
         except:
             return 1
+
+        feed = self.dict_to_feed(feed_dict)
+        episodes = []
+        for episode_dict in episodes_dict:
+            episodes.append(self.dict_to_episode(episode_dict))
+
         self.data_index.feeds.items.append(feed)
-        self.data_index.episodes.items.append(episodes)
+        self.data_index.episodes.items.extend(episodes)
         self.update_feed_index()
         self.update_episodes_index()
         return 0
-
-    def main(self):
+    
+    def load(self):
         debug_print("Reading JSON indexes...")
         feeds_index_dict = self.read_feeds_index()
         if feeds_index_dict is None:
-            feeds_index = []
+            feeds_index_dict = []
         episodes_index_dict = self.read_episodes_index()
         if episodes_index_dict is None:
-            episodes_index = []
+            episodes_index_dict = []
 
         if feeds_index_dict is not None and episodes_index_dict is not None:
             debug_print("Converting indexes...")
@@ -100,8 +133,10 @@ class Podzol(object):
         else:
             print("Error: Unable to read indexes!")
             return 1
-
         return 0
+
+    def main(self):
+        self.load()
 
 
 if __name__ == "__main__":

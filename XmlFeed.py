@@ -9,6 +9,15 @@ episode_properties = [
     'copyright'
 ]
 
+feed_alias = {
+    "lastBuildDate": "date_updated",
+    "copyright": "feed_copyright"
+}
+episode_alias = {
+    "pubDate": "date_added",
+    "copyright": "ep_copyright"
+}
+
 class XmlFeed(object):
     def __init__(self, url):
         self.url = url
@@ -41,10 +50,14 @@ class XmlFeed(object):
         self.feed["feed_id"] = self.url
         for prop in props:
             try:
-                self.feed[prop] = self.root.getElementsByTagName(prop)[0].firstChild.nodeValue
+                prop_value = self.root.getElementsByTagName(prop)[0].firstChild.nodeValue
             except:
-                self.feed[prop] = "No " + prop + " specified."
+                prop_value = "No " + prop + " specified."
                 pass
+            if prop in feed_alias.keys():
+                self.feed[feed_alias[prop]] = prop_value
+            else:
+                self.feed[prop] = prop_value
         return self.feed
     
     def get_episodes(self):
@@ -56,10 +69,13 @@ class XmlFeed(object):
             for prop in episode_properties:
                 try:
                     prop_value = item.getElementsByTagName(prop)[0].firstChild.nodeValue
-                    episode[prop] = prop_value
                 except:
-                    episode[prop] = "No " + prop + " specified."
+                    prop_value = "No " + prop + " specified."
                     pass
+                if prop in episode_alias.keys():
+                    episode[episode_alias[prop]] = prop_value
+                else:
+                    episode[prop] = prop_value
             source_url_node = item.getElementsByTagName('enclosure')
             episode["source_url"] = source_url_node[0].attributes['url'].value
             episode["ep_id"] = episode_id

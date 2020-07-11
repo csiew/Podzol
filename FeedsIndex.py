@@ -18,6 +18,13 @@ class FeedsIndex(object):
                 feed_copyright=feed["feed_copyright"]
             )
             self.items.append(converted_feed)
+    
+    def as_dict(self):
+        items_dict = []
+        for item in self.items:
+            item_dict = item.as_dict()
+            items_dict.append(item_dict)
+        return items_dict
 
     def list(self):
         for feed in self.items:

@@ -20,6 +20,13 @@ class EpisodesIndex(object):
                 source_url=episode["source_url"]
             )
             self.items.append(converted_episode)
+    
+    def as_dict(self):
+        items_dict = []
+        for item in self.items:
+            item_dict = item.as_dict()
+            items_dict.append(item_dict)
+        return items_dict
 
     def list(self):
         for episode in self.items:

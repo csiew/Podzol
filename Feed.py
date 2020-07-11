@@ -6,6 +6,17 @@ class Feed(object):
         self.link = link
         self.date_updated = date_updated
         self.feed_copyright = feed_copyright
+    
+    def as_dict(self):
+        feed_dict = {
+            "feed_id": self.feed_id,
+            "title": self.title,
+            "description": self.description,
+            "link": self.link,
+            "date_updated": self.date_updated,
+            "feed_copyright": self.feed_copyright
+        }
+        return feed_dict
 
     def contents(self):
         print("id:\t\t\t" + self.feed_id)

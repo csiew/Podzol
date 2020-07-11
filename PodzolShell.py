@@ -79,7 +79,7 @@ class AudioPlayer(object):
 
 class PodzolShell(object):
     def __init__(self, backend):
-        self.primary_commands = ["exit", "help", "search", "list", "play", "add"]
+        self.primary_commands = ["exit", "help", "search", "list", "play", "add", "reload"]
         self.operations = {
             "list": ["-f", "-e"]
         }
@@ -244,6 +244,9 @@ class PodzolShell(object):
                     self.handle_play(args)
                 elif args[0] == "add":
                     self.handle_add(args)
+                elif args[0] == "reload":
+                    print("Reloading indexes...")
+                    self.backend.load()
                 else:
                     continue
     
