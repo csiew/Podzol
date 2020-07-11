@@ -1,6 +1,5 @@
 import io
 import requests
-import urllib.request
 import pygame
 import time
 from PodzolBackend import Podzol, debug_print
@@ -80,7 +79,7 @@ class AudioPlayer(object):
 
 class PodzolShell(object):
     def __init__(self, backend):
-        self.primary_commands = ["exit", "help", "search", "list", "play"]
+        self.primary_commands = ["exit", "help", "search", "list", "play", "add"]
         self.operations = {
             "list": ["-f", "-e"]
         }
@@ -207,6 +206,20 @@ class PodzolShell(object):
             print("\tEpisodes:\t" + str(len(results["episodes"])))
         else:
             print("search [keyword 1] [keyword 2] [etc...]")
+    
+    def handle_add(self, args):
+        if len(args) > 1:
+            urls = args[1:]
+            total = len(urls)
+            success = total
+            for url in urls:
+                result = self.backend.add_podcast(url)
+                if result == 1:
+                    print("Error: Unable to add URL - " + url)
+                    success -= 1
+            print("Added " + str(success) + " of " + str(total) + " podcast feeds provided")
+        else:
+            print("add [url 1] [url 2] [etc...]")
 
     def event_loop(self):
         while 1:
@@ -229,6 +242,8 @@ class PodzolShell(object):
                     self.handle_list(args)
                 elif args[0] == "play":
                     self.handle_play(args)
+                elif args[0] == "add":
+                    self.handle_add(args)
                 else:
                     continue
     
