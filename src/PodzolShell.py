@@ -79,7 +79,7 @@ class AudioPlayer(object):
 
 class PodzolShell(object):
     def __init__(self, backend):
-        self.primary_commands = ["exit", "help", "search", "list", "play", "add", "delete", "reload"]
+        self.primary_commands = ["exit", "help", "search", "list", "play", "add", "delete", "reload", "purge"]
         self.operations = {
             "list": ["-f", "-e"],
             "play": ["-f", "-e"],
@@ -245,6 +245,19 @@ class PodzolShell(object):
                 print("Error: Failed to update your library")
         else:
             print(usage_msg)
+    
+    def handle_purge(self):
+        print("WARNING! This will erase your library!")
+        print("Are you sure you want to continue? [Default: No]")
+        user_choice = input("podzol > purge > [y/N] ")
+        if user_choice.lower() == "y":
+            result = self.backend.purge()
+            if result == 0:
+                print("Library purged")
+            else:
+                print("Error: Unable to purge library")
+        else:
+            print("Not purging library")
 
     def event_loop(self):
         while 1:
@@ -271,6 +284,8 @@ class PodzolShell(object):
                     self.handle_add(args)
                 elif args[0] == "delete":
                     self.handle_delete(args)
+                elif args[0] == "purge":
+                    self.handle_purge()
                 elif args[0] == "reload":
                     print("Reloading indexes...")
                     self.backend.load()

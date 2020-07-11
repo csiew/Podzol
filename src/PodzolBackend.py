@@ -50,6 +50,14 @@ class Podzol(object):
                 print(error_msg)
                 pass
             return 1
+    
+    def purge(self):
+        try:
+            self.write_json(self.get_feeds_path(), [])
+            self.write_json(self.get_episodes_path(), [])
+        except:
+            return 1
+        return 0
 
     def get_feeds_path(self):
         return INDEX_STORE_PATH + FEEDS_INDEX_PATH
