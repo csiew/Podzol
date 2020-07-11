@@ -80,7 +80,7 @@ class AudioPlayer(object):
 
 class PodzolShell(object):
     def __init__(self, backend):
-        self.primary_commands = ["exit", "help", "list", "play"]
+        self.primary_commands = ["exit", "help", "search", "list", "play"]
         self.operations = {
             "list": ["-f", "-e"]
         }
@@ -196,6 +196,17 @@ class PodzolShell(object):
             self.audio_player(episode.source_url)
         else:
             print(usage_msg)
+    
+    def handle_search(self, args):
+        if len(args) > 1:
+            keywords = args[1:]
+            results = self.backend.data_index.search(keywords)
+            print("Keywords: " + str(keywords))
+            print("Results:")
+            print("\tFeeds:\t\t" + str(len(results["feeds"])))
+            print("\tEpisodes:\t" + str(len(results["episodes"])))
+        else:
+            print("search [keyword 1] [keyword 2] [etc...]")
 
     def event_loop(self):
         while 1:
@@ -212,10 +223,14 @@ class PodzolShell(object):
                         if item in self.operations.keys():
                             for subitem in self.operations[item]:
                                 print("     " + subitem)
+                elif args[0] == "search":
+                    self.handle_search(args)
                 elif args[0] == "list":
                     self.handle_list(args)
                 elif args[0] == "play":
                     self.handle_play(args)
+                else:
+                    continue
     
     def main(self):
         self.assemble_podcast_index()
