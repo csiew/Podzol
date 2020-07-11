@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/bin/python3 __main__.py
+/usr/bin/python3 PodzolShell.py
