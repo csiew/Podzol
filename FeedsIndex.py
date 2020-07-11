@@ -20,4 +20,5 @@ class FeedsIndex(object):
             self.feeds.append(converted_feed)
 
     def list(self):
-        print(self.feeds)
+        for feed in self.feeds:
+            feed.contents()

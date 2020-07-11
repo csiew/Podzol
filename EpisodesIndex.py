@@ -22,4 +22,5 @@ class EpisodesIndex(object):
             self.episodes.append(converted_episode)
 
     def list(self):
-        print(self.episodes)
+        for episode in self.episodes:
+            episode.contents()
