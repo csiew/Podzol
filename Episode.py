@@ -23,12 +23,12 @@ class Episode(object):
         return episode_dict
 
     def contents(self):
-        print("id:\t\t\t" + self.ep_id)
-        print("feed_id:\t\t" + self.feed_id)
-        print("title:\t\t\t" + self.title)
-        print("description:\t\t" + self.description)
-        print("link:\t\t\t" + self.link)
-        print("date_added:\t\t" + self.date_added)
-        print("ep_copyright:\t\t" + self.ep_copyright)
-        print("source_url:\t\t" + self.source_url)
+        print("id:\t\t\t" + str(self.ep_id))
+        print("feed_id:\t\t" + str(self.feed_id))
+        print("title:\t\t\t" + str(self.title))
+        print("description:\t\t" + str(self.description))
+        print("link:\t\t\t" + str(self.link))
+        print("date_added:\t\t" + str(self.date_added))
+        print("ep_copyright:\t\t" + str(self.ep_copyright))
+        print("source_url:\t\t" + str(self.source_url))
         print("\n")

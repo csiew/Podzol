@@ -19,10 +19,10 @@ class Feed(object):
         return feed_dict
 
     def contents(self):
-        print("id:\t\t\t" + self.feed_id)
-        print("title:\t\t\t" + self.title)
-        print("description:\t\t" + self.description)
-        print("link:\t\t\t" + self.link)
-        print("date_updated:\t\t" + self.date_updated)
-        print("feed_copyright:\t\t" + self.feed_copyright)
+        print("id:\t\t\t" + str(self.feed_id))
+        print("title:\t\t\t" + str(self.title))
+        print("description:\t\t" + str(self.description))
+        print("link:\t\t\t" + str(self.link))
+        print("date_updated:\t\t" + str(self.date_updated))
+        print("feed_copyright:\t\t" + str(self.feed_copyright))
         print("\n")
