@@ -4,7 +4,7 @@ from Feed import Feed
 class FeedsIndex(object):
     def __init__(self, feeds_index_dict):
         self.feeds_index_dict = feeds_index_dict
-        self.feeds = []
+        self.items = []
         self.convert()
 
     def convert(self):
@@ -17,8 +17,8 @@ class FeedsIndex(object):
                 date_updated=feed["date_updated"],
                 feed_copyright=feed["feed_copyright"]
             )
-            self.feeds.append(converted_feed)
+            self.items.append(converted_feed)
 
     def list(self):
-        for feed in self.feeds:
+        for feed in self.items:
             feed.contents()
