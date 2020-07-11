@@ -81,7 +81,9 @@ class PodzolShell(object):
     def __init__(self, backend):
         self.primary_commands = ["exit", "help", "search", "list", "play", "add", "delete", "reload"]
         self.operations = {
-            "list": ["-f", "-e"]
+            "list": ["-f", "-e"],
+            "play": ["-f", "-e"],
+            "delete": ["-f"],
         }
         self.podcast_index = {}
         self.backend = backend
