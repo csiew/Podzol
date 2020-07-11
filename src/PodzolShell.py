@@ -5,6 +5,9 @@ import time
 from PodzolBackend import Podzol, debug_print
 
 
+SEPARATOR = "==========================================="
+
+
 # ACKNOWLEDGEMENTS
 # ResponseStream by sloth
 # https://stackoverflow.com/a/58763348
@@ -140,8 +143,11 @@ class PodzolShell(object):
             print("[" + str(key) + "] - " + value.title)
 
     def list_feeds(self):
-        for key, value in self.podcast_index.items():
-            print("[" + str(key) + "] - " + value["feed"].title)
+        if len(self.podcast_index.items()) > 0:
+            for key, value in self.podcast_index.items():
+                print("[" + str(key) + "] - " + value["feed"].title)
+        else:
+            print("You don't have anything in your library")
 
     def handle_list(self, args):
         if len(args) >= 2 and args[1] in self.operations["list"] and self.backend.data_index is not None:
@@ -198,14 +204,32 @@ class PodzolShell(object):
         else:
             print(usage_msg)
     
+    def get_feed_key(self, feed_id):
+        for key, value in self.podcast_index.items():
+            if value["feed"].feed_id == feed_id:
+                return key
+        return None
+    
     def handle_search(self, args):
         if len(args) > 1:
             keywords = args[1:]
             results = self.backend.data_index.search(keywords)
-            print("Keywords: " + str(keywords))
-            print("Results:")
-            print("\tFeeds:\t\t" + str(len(results["feeds"])))
-            print("\tEpisodes:\t" + str(len(results["episodes"])))
+            print("KEYWORDS: " + str(keywords))
+            print("RESULTS")
+            print(SEPARATOR)
+            print("\tFEEDS [" + str(len(results["feeds"])) + "]:")
+            for feed in results["feeds"]:
+                try:
+                    feed_key = self.get_feed_key(feed.feed_id)
+                    print("[" + str(feed_key) + "] - " + feed.title)
+                except:
+                    pass
+            print(SEPARATOR)
+            print("\tEPISODES [" + str(len(results["episodes"])) + "]:")
+            for episode in results["episodes"]:
+                feed_key = self.get_feed_key(episode.feed_id)
+                print("[" + str(feed_key) + "][" + str(episode.ep_id) + "] - " + episode.title)
+            print(SEPARATOR)
         else:
             print("search [keyword 1] [keyword 2] [etc...]")
     
