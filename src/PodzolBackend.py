@@ -9,7 +9,7 @@ from DataIndex import DataIndex
 from FeedsIndex import FeedsIndex
 from EpisodesIndex import EpisodesIndex
 
-DEBUG = True
+DEBUG = False
 
 INDEX_STORE_PATH = "data/"
 FEEDS_INDEX_PATH = "feeds.json"

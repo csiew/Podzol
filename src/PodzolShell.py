@@ -1,6 +1,8 @@
 import io
 import requests
-import pygame
+import contextlib
+with contextlib.redirect_stdout(None):      # https://stackoverflow.com/a/51470016
+    import pygame
 import time
 from PodzolBackend import Podzol, debug_print
 
@@ -282,8 +284,18 @@ class PodzolShell(object):
                 print("Error: Unable to purge library")
         else:
             print("Not purging library")
+    
+    def handle_help(self):
+        print("Commands:")
+        for item in self.primary_commands:
+            print(" - " + item)
+            if item in self.operations.keys():
+                for subitem in self.operations[item]:
+                    print("     " + subitem)
 
     def event_loop(self):
+        print("Podzol: A minimalist CLI podcast client")
+        print("Use the 'help' command to get a list of commands\n")
         while 1:
             command_string = input("podzol > ")
             args = command_string.split()
@@ -292,12 +304,7 @@ class PodzolShell(object):
                 if args[0] == "exit":
                     exit(0)
                 elif args[0] == "help":
-                    print("Commands:")
-                    for item in self.primary_commands:
-                        print(" " + item)
-                        if item in self.operations.keys():
-                            for subitem in self.operations[item]:
-                                print("     " + subitem)
+                    self.handle_help()
                 elif args[0] == "search":
                     self.handle_search(args)
                 elif args[0] == "list":
