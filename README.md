@@ -17,6 +17,11 @@ Podzol is navigable through a rudimentary CLI interface. This requires you to us
 - `reload`: Reload the data from the JSON indexes
 - `exit`: Exit Podzol
 
+## Known issues
+- Playback doesn't start until after the entire MP3 is cached.
+- Sometimes the audio plays at a deafening loud high-speed.
+- Sometimes the audio plays in extreme slow motion.
+
 ## Future changes
 1. Podzol will store its JSON files in ~/.local/share/ in Linux and macOS.
 2. Explore Ncurses to replace the shell-like interface (akin to [Castero](https://github.com/xgi/castero)).

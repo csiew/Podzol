@@ -64,7 +64,8 @@ class XmlFeed(object):
         episodes = []
         items = self.root.getElementsByTagName('item')
         episode_id = len(items)
-        for item in items:
+        # Always put the latest episode at the bottom
+        for item in reversed(items):
             episode = {}
             for prop in episode_properties:
                 try:

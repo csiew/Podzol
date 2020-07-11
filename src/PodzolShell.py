@@ -104,6 +104,8 @@ class PodzolShell(object):
             while self.player.get_busy():
                 timer = self.player.get_pos()
                 time.sleep(1)
+                print("Podzol might seem unresponsive and the podcast may not play immediately due to buffering!")
+                print("Use the 'help' command to get a list of commands\n")
                 control = input("podzol > player > ")
                 pygame.time.Clock().tick(10)
                 if control == "help":
@@ -117,7 +119,7 @@ class PodzolShell(object):
                     timer = timer/1000
                     print (str(timer))
                 elif int(timer) > 10:
-                    print ("True")
+                    print ("Playback ended")
                     self.player.stop()
                     break
                 else:
@@ -246,6 +248,7 @@ class PodzolShell(object):
                     print("Error: Unable to add URL - " + url)
                     success -= 1
             print("Added " + str(success) + " of " + str(total) + " podcast feeds provided")
+            self.assemble_podcast_index()
         else:
             print("add [url 1] [url 2] [etc...]")
     
@@ -267,6 +270,7 @@ class PodzolShell(object):
             if result == 0:
                 self.podcast_index.pop(feed_key)
                 print("Removed podcast from your library: " + str(feed_id))
+                self.assemble_podcast_index()
             elif result == 0:
                 print("Error: Failed to update your library")
         else:
@@ -284,6 +288,11 @@ class PodzolShell(object):
                 print("Error: Unable to purge library")
         else:
             print("Not purging library")
+
+    def handle_reload(self):
+        print("Reloading indexes...")
+        self.backend.load()
+        self.assemble_podcast_index()
     
     def handle_help(self):
         print("Commands:")
@@ -318,8 +327,7 @@ class PodzolShell(object):
                 elif args[0] == "purge":
                     self.handle_purge()
                 elif args[0] == "reload":
-                    print("Reloading indexes...")
-                    self.backend.load()
+                    self.handle_reload()
                 else:
                     continue
     
