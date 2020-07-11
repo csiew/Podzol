@@ -79,7 +79,7 @@ class AudioPlayer(object):
 
 class PodzolShell(object):
     def __init__(self, backend):
-        self.primary_commands = ["exit", "help", "search", "list", "play", "add", "reload"]
+        self.primary_commands = ["exit", "help", "search", "list", "play", "add", "delete", "reload"]
         self.operations = {
             "list": ["-f", "-e"]
         }
@@ -220,6 +220,29 @@ class PodzolShell(object):
             print("Added " + str(success) + " of " + str(total) + " podcast feeds provided")
         else:
             print("add [url 1] [url 2] [etc...]")
+    
+    def handle_delete(self, args):
+        usage_msg = "delete -f [key]\t\tDelete podcast and its episodes"
+        if len(args) == 3:
+            if not (args[1] == "-f"):
+                print(usage_msg)
+                return
+
+            try:
+                feed_key = int(args[2])
+            except:
+                print("Invalid feed key: " + args[2])
+                return
+
+            feed_id = self.podcast_index[feed_key]["feed"].feed_id
+            result = self.backend.delete_podcast(feed_id)
+            if result == 0:
+                self.podcast_index.pop(feed_key)
+                print("Removed podcast from your library: " + str(feed_id))
+            elif result == 0:
+                print("Error: Failed to update your library")
+        else:
+            print(usage_msg)
 
     def event_loop(self):
         while 1:
@@ -244,6 +267,8 @@ class PodzolShell(object):
                     self.handle_play(args)
                 elif args[0] == "add":
                     self.handle_add(args)
+                elif args[0] == "delete":
+                    self.handle_delete(args)
                 elif args[0] == "reload":
                     print("Reloading indexes...")
                     self.backend.load()

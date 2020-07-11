@@ -75,6 +75,14 @@ class Podzol(object):
             return 0
         return 1
     
+    def update_indexes(self):
+        try:
+            self.update_feed_index()
+            self.update_episodes_index()
+        except:
+            return 1
+        return 0
+    
     def dict_to_feed(self, feed_dict):
         feed = Feed(
             feed_id=feed_dict["feed_id"],
@@ -112,9 +120,12 @@ class Podzol(object):
 
         self.data_index.feeds.items.append(feed)
         self.data_index.episodes.items.extend(episodes)
-        self.update_feed_index()
-        self.update_episodes_index()
-        return 0
+        return self.update_indexes()
+    
+    def delete_podcast(self, feed_id):
+        self.data_index.feeds.items = [i for i in self.data_index.feeds.items if i.feed_id != feed_id]
+        self.data_index.episodes.items = [i for i in self.data_index.episodes.items if i.feed_id != feed_id]
+        return self.update_indexes()
     
     def load(self):
         debug_print("Reading JSON indexes...")
