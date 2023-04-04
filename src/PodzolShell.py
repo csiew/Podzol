@@ -95,16 +95,20 @@ class PodzolShell(object):
         self.player = AudioPlayer()
     
     def audio_player(self, url):
+        print("Podzol might seem unresponsive and the podcast may not play immediately due to buffering!")
+        print("Finding stream...")
         response = requests.get(url, stream=True)
+        print("Stream found")
         if (response.status_code == 200):
+            print("Buffering stream...")
             stream = ResponseStream(response.iter_content(64))
             self.player.load(stream)
+            print("Starting playback")
             self.player.play()
-            print("Playing: ",url)
+            print("Playing: ", url)
             while self.player.get_busy():
                 timer = self.player.get_pos()
                 time.sleep(1)
-                print("Podzol might seem unresponsive and the podcast may not play immediately due to buffering!")
                 print("Use the 'help' command to get a list of commands\n")
                 control = input("podzol > player > ")
                 pygame.time.Clock().tick(10)
