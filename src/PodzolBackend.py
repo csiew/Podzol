@@ -25,6 +25,18 @@ class Podzol(object):
     def __init__(self):
         self.data_index = None
 
+    @staticmethod
+    def get_data_dir_path():
+        return INDEX_STORE_PATH
+
+    @staticmethod
+    def get_feeds_path():
+        return INDEX_STORE_PATH + FEEDS_INDEX_PATH
+
+    @staticmethod
+    def get_episodes_path():
+        return INDEX_STORE_PATH + EPISODE_INDEX_PATH
+
     def read_json(self, path):
         error_msg = "Error: Unable to read path - " + path
         if os.path.exists(path):
@@ -59,16 +71,44 @@ class Podzol(object):
             return 1
         return 0
 
-    def get_feeds_path(self):
-        return INDEX_STORE_PATH + FEEDS_INDEX_PATH
+    def create_data_dir_if_not_exists(self):
+        if not os.path.exists(self.get_data_dir_path()):
+            os.makedirs(self.get_data_dir_path())
 
-    def get_episodes_path(self):
-        return INDEX_STORE_PATH + EPISODE_INDEX_PATH
+    def create_feeds_index(self):
+        self.create_data_dir_if_not_exists()
+        feeds_path = self.get_feeds_path()
+        with open(feeds_path, "x") as output_file:
+            try:
+                output_file.write("[]")
+                print("Created file at: " + feeds_path)
+                return 0
+            except IOError:
+                print("Failed to create feeds index file")
+                pass
+        return 1
+
+    def create_episodes_index(self):
+        self.create_data_dir_if_not_exists()
+        episodes_path = self.get_episodes_path()
+        with open(episodes_path, "x") as output_file:
+            try:
+                output_file.write("[]")
+                print("Created file at: " + episodes_path)
+                return 0
+            except IOError:
+                print("Failed to create episodes index file")
+                pass
+        return 1
 
     def read_feeds_index(self):
+        if not os.path.exists(self.get_feeds_path()):
+            self.create_feeds_index()
         return self.read_json(self.get_feeds_path())
 
     def read_episodes_index(self):
+        if not os.path.exists(self.get_episodes_path()):
+            self.create_episodes_index()
         return self.read_json(self.get_episodes_path())
     
     def update_feed_index(self):
