@@ -3,6 +3,11 @@ Another podcast app?! Yeah, I sometimes just want a podcast app that's barebones
 
 Podzol is written in Python and uses JSON as a 'medium of storage' rather than a database (e.g. SQLite). The CLI client uses [pygame](https://www.pygame.org/news) for audio playback functionality, and uses [a class written by *sloth* (sic)](https://stackoverflow.com/a/58763348) to handle audio streaming.
 
+## Getting Started
+To build and run Podzol locally, follow these steps:
+1. Clone the repository and run `pip install -r requirements.txt` to install all dependencies.
+2. Run `python src/PodzolShell.py` or `sh podzol.sh` or `./podzol`.
+
 ## User Guide
 Podzol is navigable through a rudimentary CLI interface. This requires you to use the commands listed below. The selection of a podcast or episode requires you to use flags (`-f [number]` for the podcast; `-e [number]` for the episode). You can refer to the numbers needed to select a podcast or episode using the `list`.
 
