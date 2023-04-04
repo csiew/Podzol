@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/bin/python3 src/PodzolShell.py
+python src/PodzolShell.py
