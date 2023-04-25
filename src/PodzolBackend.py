@@ -1,6 +1,4 @@
 import os
-import sys
-import json
 from XmlFeed import XmlFeed
 
 from Feed import Feed
@@ -8,6 +6,7 @@ from Episode import Episode
 from DataIndex import DataIndex
 from FeedsIndex import FeedsIndex
 from EpisodesIndex import EpisodesIndex
+from store.JsonUtil import read_json, write_json, make_dir
 
 DEBUG = False
 
@@ -36,44 +35,17 @@ class Podzol(object):
     @staticmethod
     def get_episodes_path():
         return INDEX_STORE_PATH + EPISODE_INDEX_PATH
-
-    def read_json(self, path):
-        error_msg = "Error: Unable to read path - " + path
-        if os.path.exists(path):
-            with open(path, "r") as json_dict:
-                try:
-                    json_dict = json.load(json_dict)
-                    return json_dict
-                except:
-                    print(error_msg)
-                    pass
-                return None
-        else:
-            print(error_msg)
-            return None
-    
-    def write_json(self, path, data_dict):
-        error_msg = "Error: Unable to write to path - " + path
-        with open(path, "w") as output_file:
-            try:
-                json.dump(data_dict, output_file)
-                return 0
-            except:
-                print(error_msg)
-                pass
-            return 1
     
     def purge(self):
         try:
-            self.write_json(self.get_feeds_path(), [])
-            self.write_json(self.get_episodes_path(), [])
+            write_json(self.get_feeds_path(), [])
+            write_json(self.get_episodes_path(), [])
         except:
             return 1
         return 0
 
     def create_data_dir_if_not_exists(self):
-        if not os.path.exists(self.get_data_dir_path()):
-            os.makedirs(self.get_data_dir_path())
+        make_dir(self.get_data_dir_path())
 
     def create_feeds_index(self):
         self.create_data_dir_if_not_exists()
@@ -104,22 +76,22 @@ class Podzol(object):
     def read_feeds_index(self):
         if not os.path.exists(self.get_feeds_path()):
             self.create_feeds_index()
-        return self.read_json(self.get_feeds_path())
+        return read_json(self.get_feeds_path())
 
     def read_episodes_index(self):
         if not os.path.exists(self.get_episodes_path()):
             self.create_episodes_index()
-        return self.read_json(self.get_episodes_path())
+        return read_json(self.get_episodes_path())
     
     def update_feed_index(self):
         if self.data_index is not None:
-            self.write_json(self.get_feeds_path(), self.data_index.feeds.as_dict())
+            write_json(self.get_feeds_path(), self.data_index.feeds.as_dict())
             return 0
         return 1
     
     def update_episodes_index(self):
         if self.data_index is not None:
-            self.write_json(self.get_episodes_path(), self.data_index.episodes.as_dict())
+            write_json(self.get_episodes_path(), self.data_index.episodes.as_dict())
             return 0
         return 1
     
